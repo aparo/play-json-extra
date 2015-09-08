@@ -6,7 +6,7 @@ import org.scalajs.sbtplugin._
 
 object Versions {
 
-  lazy val app = "2.4.3"
+  lazy val app = "2.4.3-SNAPSHOT"
 
   //scalajs
   lazy val upickle = "0.3.6"

@@ -46,6 +46,13 @@ object Common {
           historyDir.mkdir()
         Some(historyDir / t.getAbsolutePath.replace("/", "-").substring(1))
     }),
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (isSnapshot.value)
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
     publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := {

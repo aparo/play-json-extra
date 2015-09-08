@@ -1,5 +1,8 @@
-Common.settings
+import SonatypeKeys._
 
+sonatypeSettings
+
+Common.settings
 
 val scalaJSJodaTime = project.in(file("scalajs-joda-time"))
   .enablePlugins(ScalaJSPlugin)
