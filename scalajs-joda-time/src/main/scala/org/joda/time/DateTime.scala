@@ -1,8 +1,6 @@
 package org.joda.time
 
-import boopickle.Default._
 import org.joda.time.format.DateTimeFormatter
-import play.api.libs.json.{Format, Writes, Reads}
 import web.moment._
 
 class DateTime(datetime:Moment) {
@@ -11,7 +9,7 @@ class DateTime(datetime:Moment) {
   def this(year: Int, month: Int, day: Int, hour: Int = 0, minutes: Int = 0, seconds: Int = 0, milliseconds: Int = 0) = {
     this(moment.moment.apply(f"$year%04d-$month%02d-$day%02d'T'$hour%02d:$minutes%02d:$seconds%02d.$milliseconds%03d",
       format = DateTime.millis))
-    println(f"$year%04d-$month%02d-$day%02d'T'$hour%02d:$minutes%02d:$seconds%02d.$milliseconds%03d")
+//    println(f"$year%04d-$month%02d-$day%02d'T'$hour%02d:$minutes%02d:$seconds%02d.$milliseconds%03d")
   }
 
 
@@ -59,9 +57,6 @@ object DateTime {
     new DateTime(moment.moment.utc())
   }
 
-  implicit val customJodaDateReads = Reads.jodaDateReads("YYYY-MM-DDTHH:mm:ss.SSSZ")
-  implicit val customJodaDateWrites =  Writes.jodaDateWrites("YYYY-MM-DDTHH:mm:ss.SSSZ")
-  implicit val format:Format[DateTime]=Format(customJodaDateReads, customJodaDateWrites)
 
 
 }

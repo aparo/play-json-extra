@@ -3,7 +3,8 @@ package play.json.extra
 import org.joda.time.DateTime
 import org.scalatest.FunSuite
 import play.api.libs.json.Json
-
+import boopickle.Default._
+import play.json.extra.Picklers._
 
 class DatetimeTests extends FunSuite {
   case class TestDataTime(dt:DateTime)
@@ -27,6 +28,7 @@ class DatetimeTests extends FunSuite {
     println(json)
     val ts2=Json.parse(json).as[TestDataTime]
     println(s"${ts.toString} ${ts2.toString}")
+    println(s"${ts.dt.toString()} ${ts2.dt.toString()}")
 
 //    assert(ts === ts2)
     assert(ts2.dt.year.get === 2015)
