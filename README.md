@@ -1,119 +1,52 @@
-# Play JSON Variants
+play-json-extra
+===============
 
-This artifact provides a function `Variants.format[A]` that takes as parameter a root type hierarchy `A` and generates a Play `Format[A]` JSON serializer/deserializer that supports all the subtypes of `A`.
+I love working in Scala and ScalaJS. This library is my **opinionated** wrapper of several libraries merged to 
+efficiently working in JSON word. 
 
-For instance, consider the following class hierarchy:
+Main Features are:
 
-```scala
-sealed trait Foo
-case class Bar(x: Int) extends Foo
-case class Baz(s: String) extends Foo
-case class Bah(s: String) extends Foo
+* Play JSON for ScalaJS 
+* **JsonFormat** macro annotation for lazy people
+* Default field values populated in missing JSON field
+* Field rewrite for Play JSON ("key") 
+* +22 field case class formatter and more [Play Json Extension](http://play-json-extra.megl.io/playjsonext.html)
+* **Joda Datetime** for Scala and ScalaJS
+* [Strong Typed Enum](http://play-json-extra.megl.io/macrame.html) (String and Int) for Scala and ScalaJS
+* [Variant Types](http://play-json-extra.megl.io/variants.html)
+
+Full Documentation [here](http://play-json-extra.megl.io).
+
+## Installing
+
+For the stable version (to be release):
+
+```scala 
+resolvers += "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases"
+
+libraryDependencies += "io.megl" % "play-json-extra" % "2.4.3"
 ```
 
-How to write a `Reads[Foo]` JSON deserializer able to build the right variant of `Foo` given a JSON value? The naive approach could be to write the following:
 
-```scala
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
+For the snapshot version:
 
-implicit val fooReads: Reads[Foo] = (__ \ "x").read[Int].map[Foo](Bar) |
-                                    (__ \ "s").read[String].map[Foo](Baz) |
-                                    (__ \ "s").read[String].map[Foo](Bah)
+```scala 
+resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
+
+libraryDependencies += "io.megl" % "play-json-extra" % "2.4.3-SNAPSHOT"
 ```
 
-However this wouldn’t work because the deserializer is unable to distinguish between `Baz` and `Bah` values:
+## Documentation
 
-```scala
-val json = Json.obj("s" -> "hello")
-val foo = json.validate[Foo] // Is it a `Baz` or a `Bah`?
-println(foo) // "Success(Baz(hello))"
-```
+Full Documentation [here](http://play-json-extra.megl.io).
 
-Any JSON value containing a `String` field `x` is always considered to be a `Baz` value by the deserializer (though it could be a `Bah`), just because the `Baz` and `Bah` deserializers are tried in order.
+## Thanks
 
-In order to differentiate between all the `Foo` variants, we need to add a field in the JSON representation of `Foo` values:
+Thank you very much to:
 
-```scala
-val bahJson = Json.obj("s" -> "hello", "$variant" -> "Bah") // This is a `Bah`
-val bazJson = Json.obj("s" -> "bye", "$variant" -> "Baz") // This is a `Baz`
-val barJson = Json.obj("x" -> "42", "$variant" -> "Bar") // And this is a `Bar`
-```
-
-The deserializer can then be written as follows:
-
-```scala
-implicit val fooReads: Reads[Foo] = (__ \ "$variant").read[String].flatMap[Foo] {
-  case "Bar" => (__ \ "x").read[Int].map(Bar)
-  case "Baz" => (__ \ "s").read[String].map(Baz)
-  case "Bah" => (__ \ "s").read[String].map(Bah)
-}
-```
-
-Usage:
-
-```scala
-bahJson.validate[Foo] // Success(Bah("hello"))
-bazJson.validate[Foo] // Success(Baz("bye"))
-```
-
-The above text introduced a problem and its solution, but this one is very cumbersome: you don’t want to always write by hand the JSON serializer and deserializer of your data type hierarchy.
-
-The purpose of this project is to generate these serializer and deserializer for you. Just write the following and you are done:
-
-```scala
-import julienrf.variants.Variants
-
-implicit val format: Format[Foo] = Variants.format[Foo]
-```
-
-You can also just generate a `Reads` or a `Writes`:
-
-```scala
-import julienrf.variants.Variants
-
-implicit val reads: Reads[Foo] = Variants.reads[Foo]
-implicit val writes: Writes[Foo] = Variants.writes[Foo]
-```
-
-By default the field used to discriminate the target object’s type is named `$variant` but you can define your own logic:
-
-```scala
-implicit val format: Format[Foo] = Variants.format[Foo]((__ \ "type").read[String])
-implicit val reads: Reads[Foo] = Variants.reads[Foo]((__ \ "type").read[String])
-implicit val writes: Writes[Foo] = Variants.writes[Foo]((__ \ "type").read[String])
-```
-
-Or, you can transform the value of the JSON field into a valid class name:
-
-```scala
-implicit val reads: Reads[Foo] = Variants.reads[Foo]((__ \ "type").read[String].map(_.capitalize))
-```
-
-# Installation
-
-Add the following dependency to your project:
-
-```scala
-libraryDependencies += "org.julienrf" %% "play-json-variants" % "2.0"
-```
-
-The 2.0 version is compatible with Play 2.3.x and with both Scala 2.10 and 2.11.
-
-# How Does It Work?
-
-The `Variants.format[Foo]` is a Scala macro that takes as parameter the root type of a class hierarchy and expands to code equivalent to the hand-written version: it adds a `$variant` field to the default JSON serializer, containing the name of the variant, and uses it to deserialize values to the correct type.
-
-# Known Limitations
-
-* For now the macro expects its type parameter to be the root **sealed trait** of a class hierarchy made of **case classes** or **case objects** ;
-* Recursive types are not supported ;
-* Polymorphic types are not supported ;
-* Due to initialization order, your class hierarchy **must** be fully defined **before** `Variants.format` is used.
-
-# Changelog
-
-- 2.0: Generalize `transform` and `discriminator` parameters
-- 1.1.0: Add support for an optional `transform` parameter (thanks to Nikita Melkozerov)
-- 1.0.1: Remove unnecessary macro paradise dependency when Scala 2.11 (thanks to Kenji Yoshida)
-- 1.0.0: Support for `Reads`, `Writes` and `Format`
+* Li Haoyi for [upickle](https://github.com/lihaoyi/upickle-pprint) and all his scalaJS stuff
+* Jan Christopher Vogt for [Play JSON Extensions](https://github.com/cvogt/play-json-extensions)
+* Chris Neveu for [Macramé](https://github.com/ChrisNeveu/macrame)
+* Julien Richard-Foy for [Play JSON Variants](https://github.com/julienrf/play-json-variants)
+* The ScalaJS team
+* The Play Framework team
