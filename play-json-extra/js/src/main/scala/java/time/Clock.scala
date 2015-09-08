@@ -13,23 +13,22 @@ object Clock {
 
 }
 
-case
-class FixedClock(val instant: Instant, val zone: ZoneId) extends Temporal with Clock {
+case class FixedClock(instant: Instant, zone: ZoneId) extends Temporal with Clock {
 
-  override def getZone: ZoneId = zone
+  def getZone: ZoneId = zone
 
-  override def withZone(zone: ZoneId): Clock = new FixedClock(this.instant, zone)
+  def withZone(zone: ZoneId): Clock = new FixedClock(this.instant, zone)
 
-  override def isSupported(unit: TemporalUnit): Boolean = ???
+  def isSupported(unit: TemporalUnit): Boolean = ???
 
-  override def plus(amountToAdd: Long, unit: TemporalUnit): Temporal = ???
+  def plus(amountToAdd: Long, unit: TemporalUnit): Temporal = ???
 
-  override def until(endExclusive: Temporal, unit: TemporalUnit): Long = ???
+  def until(endExclusive: Temporal, unit: TemporalUnit): Long = ???
 
-  override def `with`(field: TemporalField, newValue: Long): Temporal = ???
+  def `with`(field: TemporalField, newValue: Long): Temporal = ???
 
-  override def isSupported(field: TemporalField): Boolean = ???
+  def isSupported(field: TemporalField): Boolean = ???
 
-  override def getLong(field: TemporalField): Long = ???
+  def getLong(field: TemporalField): Long = ???
 
 }
