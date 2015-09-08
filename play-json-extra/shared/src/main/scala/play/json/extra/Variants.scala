@@ -3,7 +3,7 @@ package play.json.extra
 import scala.language.experimental.macros
 
 import play.api.libs.json.{Writes, Reads, Format, __}
-import scala.reflect.macros.Context
+import scala.reflect.macros.blackbox.Context
 
 object Variants {
 
@@ -146,7 +146,7 @@ object Variants {
       import c.universe._
       val writesCases = for (variant <- variants) yield {
         if (!variant.isModuleClass) {
-          val term = newTermName(c.fresh())
+          val term = TermName(c.freshName())
           cq"""$term: $variant => play.api.libs.json.Json.toJson($term)(play.api.libs.json.Json.writes[$variant]).as[play.api.libs.json.JsObject] ++ $discriminator.writes(${variant.name.decodedName.toString})"""
         } else {
           cq"""_: $variant => $discriminator.writes(${variant.name.decodedName.toString})"""
@@ -161,7 +161,7 @@ object Variants {
         if (!variant.isModuleClass) {
           cq"""${variant.name.decodedName.toString} => play.api.libs.json.Json.fromJson(json)(play.api.libs.json.Json.reads[$variant])"""
         } else {
-          cq"""${variant.name.decodedName.toString} => play.api.libs.json.JsSuccess(${newTermName(variant.name.decodedName.toString)})"""
+          cq"""${variant.name.decodedName.toString} => play.api.libs.json.JsSuccess(${TermName(variant.name.decodedName.toString)})"""
         }
       }
         q"""

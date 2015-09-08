@@ -10,6 +10,7 @@ val playJsonExtra = crossProject.in(file("play-json-extra"))
     libraryDependencies ++= DependencyHelpers.compile(Library.scalastm, Library.scalaCompiler) ++
       Seq(
         "com.lihaoyi" %%% "upickle" % Versions.upickle,
+        "me.chrons" %% "boopickle" % Versions.boopickle,
         "org.scalatest" %%% "scalatest" % Versions.scalaTestJS % "test",
         "com.lihaoyi" %%% "utest" % "0.3.1" % "test") ++
       DependencyHelpers.provided(Library.scalaReflect)
