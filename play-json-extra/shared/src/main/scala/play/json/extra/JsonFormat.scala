@@ -21,6 +21,7 @@ object JsonFormatMacro {
       val extraMethods: ListBuffer[Tree] = ListBuffer()
 
       def getTree: Tree = ModuleDef(mods, name, Template(parents, self,
+      q"""import play.json.extra.implicits.optionWithNull""".asInstanceOf[Tree] ::
         q"""import play.api.libs.json._ ;// JSON library""".asInstanceOf[Tree] ::
           q"""import play.api.libs.json.Reads._ ; // Custom validation helpers""".asInstanceOf[Tree] ::
           q"""import play.api.libs.functional.syntax._ ; // Combinator syntax""".asInstanceOf[Tree] ::

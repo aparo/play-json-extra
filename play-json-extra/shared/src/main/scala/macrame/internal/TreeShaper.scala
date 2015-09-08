@@ -79,7 +79,7 @@ object enum {
       }
       TreeShaper[c.type](c).members {
          case t @ Ident(_) ⇒ List(t)
-         case t @ DefDef(_, name, _, _, _, _) if name.decoded == "<init>" ⇒ List(t)
+         case t @ DefDef(_, name, _, _, _, _) if name.decodedName.toString == "<init>" ⇒ List(t)
          case t ⇒
             c.abort(t.pos, "An enum may only contain identifiers.")
             List(t)
@@ -88,13 +88,13 @@ object enum {
          case ClassDef(mods, enumName, tparams, impl) ⇒
             impl.body.foreach {
                case Ident(_) ⇒
-               case DefDef(_, name, _, _, _, _) if name.decoded == "<init>" ⇒
+               case DefDef(_, name, _, _, _, _) if name.decodedName.toString == "<init>" ⇒
                case t ⇒
                   println(showRaw(t))
                   c.abort(t.pos, "An enum may only contain identifiers.")
             }
             val init = impl.body.find {
-               case DefDef(_, name, _, _, _, _) if name.decoded == "<init>" ⇒ true
+               case DefDef(_, name, _, _, _, _) if name.decodedName.toString == "<init>" ⇒ true
             }.get
             val cases = impl.body.collect {
                case Ident(name) ⇒
