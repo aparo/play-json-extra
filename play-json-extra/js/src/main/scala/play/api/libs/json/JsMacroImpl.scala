@@ -9,16 +9,17 @@ import language.experimental.macros
 
 object JsMacroImpl {
 
-  def formatImpl[A: c.WeakTypeTag](c: Context): c.Expr[OFormat[A]] =
-    macroImpl[A, OFormat, Format](c, "format", "inmap", reads = true, writes = true)
+  def formatImpl[A: c.WeakTypeTag](c: Context): c.Expr[Format[A]] =
+    macroImpl[A, Format](c, "format", "inmap", reads = true, writes = true)
 
   def readsImpl[A: c.WeakTypeTag](c: Context): c.Expr[Reads[A]] =
-    macroImpl[A, Reads, Reads](c, "read", "map", reads = true, writes = false)
+    macroImpl[A, Reads](c, "read", "map", reads = true, writes = false)
 
-  def writesImpl[A: c.WeakTypeTag](c: Context): c.Expr[OWrites[A]] =
-    macroImpl[A, OWrites, Writes](c, "write", "contramap", reads = false, writes = true)
+  def writesImpl[A: c.WeakTypeTag](c: Context): c.Expr[Writes[A]] =
+    macroImpl[A, Writes](c, "write", "contramap", reads = false, writes = true)
 
-  def macroImpl[A, M[_], N[_]](c: Context, methodName: String, mapLikeMethod: String, reads: Boolean, writes: Boolean)(implicit atag: c.WeakTypeTag[A], matag: c.WeakTypeTag[M[A]], natag: c.WeakTypeTag[N[A]]): c.Expr[M[A]] = {
+  def macroImpl[A, M[_]](c: Context, methodName: String, mapLikeMethod: String, reads: Boolean, writes: Boolean)(implicit atag: c.WeakTypeTag[A], matag: c.WeakTypeTag[M[A]]): c.Expr[M[A]] = {
+
     val nullableMethodName = s"${methodName}Nullable"
     val lazyMethodName = s"lazy${methodName.capitalize}"
 
@@ -125,7 +126,7 @@ object JsMacroImpl {
       }
 
       // builds M implicit from expected type
-      val neededImplicitType = appliedType(natag.tpe.typeConstructor, tpe :: Nil)
+      val neededImplicitType = appliedType(matag.tpe.typeConstructor, tpe :: Nil)
       // infers implicit
       val neededImplicit = c.inferImplicitValue(neededImplicitType)
       Implicit(name, implType, neededImplicit, isRecursive, tpe)
@@ -237,7 +238,7 @@ object JsMacroImpl {
         List(importFunctionalSyntax),
         finalTree
       )
-      //println(s"nonrec block:$block")
+      //println("block:"+block)
       c.Expr[M[A]](block)
     } else {
       val block = Select(
@@ -291,7 +292,7 @@ object JsMacroImpl {
         newTermName("lazyStuff")
       )
 
-      //println(s"is rec block:$block")
+      // println("block:" + block)
 
       c.Expr[M[A]](block)
     }
