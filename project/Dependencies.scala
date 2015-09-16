@@ -20,7 +20,7 @@ object Versions {
   lazy val scalaTestJS = "3.0.0-M7"
 
   lazy val play = _root_.play.core.PlayVersion.current
-  lazy val specs2 = "3.6.2"
+  lazy val specs2 = "3.6.4"
 
 }
 
