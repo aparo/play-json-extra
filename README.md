@@ -15,11 +15,13 @@ Main Features are:
 * [Strong Typed Enum](http://play-json-extra.megl.io/macrame.html) (String and Int) for Scala and ScalaJS
 * [Variant Types](http://play-json-extra.megl.io/variants.html)
 
+The current version is targeting play-json 2.4.3 
+
 Full Documentation [here](http://play-json-extra.megl.io).
 
 ## Installing
 
-For the stable version (to be release):
+For the stable version:
 
 ```scala 
 resolvers += "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases"
