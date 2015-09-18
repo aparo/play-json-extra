@@ -335,7 +335,6 @@ trait DefaultWrites {
    * {{{
    * import java.time.LocalDateTime
    * import play.api.libs.json.Writes
-   * import play.api.libs.json.Java8Writes
    *
    * implicit val ldtnWrites = Writes.LocalDateTimeNumberWrites
    * }}}
@@ -463,7 +462,7 @@ trait DefaultWrites {
    * Serializer for java.util.UUID
    */
   implicit object UuidWrites extends Writes[java.util.UUID] {
-    def writes(u: java.util.UUID) = JsString(u.toString())
+    def writes(u: java.util.UUID) = JsString(u.toString)
   }
 
   /**

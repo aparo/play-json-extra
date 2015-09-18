@@ -15,6 +15,11 @@ class DateTime(datetime:Moment) {
 
   def getMillis: Long = datetime.milliseconds().toLong
 
+  override def toString(): String = {
+    datetime.format(DateTime.millis)
+  }
+
+
   def toString(pattern: String): String = {
     datetime.format(pattern)
   }
@@ -42,8 +47,8 @@ class DateTime(datetime:Moment) {
 }
 
 object DateTime {
-  val mini = "yyyy-MM-ddTHH:mm:ss"
-  val millis = "yyyy-MM-ddTHH:mm:ss.SSS"
+  val mini = "YYYY-MM-DDTHH:mm:ss"
+  val millis = "YYYY-MM-DDTHH:mm:ss.SSS"
 
   def parse(input:String, formatter:DateTimeFormatter):DateTime={
     new DateTime(moment.moment.apply(input, format = formatter.pattern))
