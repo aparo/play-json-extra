@@ -24,7 +24,7 @@ For the stable version (to be release):
 ```scala 
 resolvers += "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases"
 
-libraryDependencies += "io.megl" % "play-json-extra" % "2.4.3"
+libraryDependencies += "io.megl" %% "play-json-extra" % "2.4.3"
 ```
 
 
@@ -33,8 +33,10 @@ For the snapshot version:
 ```scala 
 resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
 
-libraryDependencies += "io.megl" % "play-json-extra" % "2.4.3-SNAPSHOT"
+libraryDependencies += "io.megl" %% "play-json-extra" % "2.4.3-SNAPSHOT"
 ```
+
+play-json-extra requires scala 2.11.x
 
 ## Documentation
 
