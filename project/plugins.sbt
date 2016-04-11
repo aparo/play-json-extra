@@ -9,19 +9,17 @@ resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releas
 resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 resolvers += Resolver.sonatypeRepo("public")
 
-addSbtPlugin("com.typesafe.play"  % "sbt-plugin"            % "2.4.3")
+addSbtPlugin("com.typesafe.play"  % "sbt-plugin"            % "2.5.1")
 addSbtPlugin("com.eed3si9n"       % "sbt-unidoc"            % "0.3.2")
 addSbtPlugin("com.github.gseitz"  % "sbt-release"           % "0.8.5")
-addSbtPlugin("org.scala-js"       % "sbt-scalajs"           % "0.6.5")
+addSbtPlugin("org.scala-js"       % "sbt-scalajs"           % "0.6.8")
 addSbtPlugin("org.scoverage"      % "sbt-scoverage"         % "1.0.4")
 addSbtPlugin("com.codacy"         % "sbt-codacy-coverage"   % "1.0.3")
 addSbtPlugin("org.scoverage"      % "sbt-coveralls"         % "1.0.0")
 addSbtPlugin("com.typesafe.sbt"   % "sbt-scalariform"       % "1.3.0")
 addSbtPlugin("org.scalastyle"     % "scalastyle-sbt-plugin" % "0.7.0")
 // https://github.com/rtimush/sbt-updates
-addSbtPlugin("com.timushev.sbt"   % "sbt-updates"           % "0.1.8")
-addSbtPlugin("net.virtual-void"   % "sbt-dependency-graph"  % "0.7.5")
-addSbtPlugin("com.eed3si9n"       % "sbt-buildinfo"         % "0.3.2")
+addSbtPlugin("com.timushev.sbt"   % "sbt-updates"           % "0.1.10")
 addSbtPlugin("com.scalapenos"     % "sbt-prompt"            % "0.2.1")
 
 addSbtPlugin("com.jsuereth"       % "sbt-pgp"               % "1.0.0")

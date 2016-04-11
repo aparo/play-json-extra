@@ -1,10 +1,9 @@
 /*
- * Copyright (C) 2009-2015 Typesafe Inc. <http://www.typesafe.com>
+ * Copyright (C) 2009-2016 Lightbend Inc. <https://www.lightbend.com>
  */
 package play.api.libs.json
 
 import java.io.InputStream
-import play.api.libs.iteratee.Execution.Implicits.defaultExecutionContext
 import play.api.libs.json.jackson.JacksonJson
 
 /**
@@ -140,11 +139,8 @@ object Json {
    *
    * There is an implicit conversion from any Type with a Json Writes to JsValueWrapper
    * which is an empty trait that shouldn't end into unexpected implicit conversions.
-   *
-   * Something to note due to `JsValueWrapper` extending `NotNull` :
-   * `null` or `None` will end into compiling error : use JsNull instead.
    */
-  sealed trait JsValueWrapper extends NotNull
+  sealed trait JsValueWrapper
 
   private case class JsValueWrapperImpl(field: JsValue) extends JsValueWrapper
 
@@ -155,26 +151,6 @@ object Json {
   def obj(fields: (String, JsValueWrapper)*): JsObject = JsObject(fields.map(f => (f._1, f._2.asInstanceOf[JsValueWrapperImpl].field)))
   def arr(fields: JsValueWrapper*): JsArray = JsArray(fields.map(_.asInstanceOf[JsValueWrapperImpl].field))
 
-  import play.api.libs.iteratee.Enumeratee
-
-  /**
-   * Transform a stream of A to a stream of JsValue
-   * {{{
-   *   val fooStream: Enumerator[Foo] = ???
-   *   val jsonStream: Enumerator[JsValue] = fooStream &> Json.toJson
-   * }}}
-   */
-  def toJson[A: Writes]: Enumeratee[A, JsValue] = Enumeratee.map[A](Json.toJson(_))
-  /**
-   * Transform a stream of JsValue to a stream of A, keeping only successful results
-   * {{{
-   *   val jsonStream: Enumerator[JsValue] = ???
-   *   val fooStream: Enumerator[Foo] = jsonStream &> Json.fromJson
-   * }}}
-   */
-  def fromJson[A: Reads]: Enumeratee[JsValue, A] =
-    Enumeratee.map[JsValue]((json: JsValue) => Json.fromJson(json)) ><> Enumeratee.collect[JsResult[A]] { case JsSuccess(value, _) => value }
-
   /**
    * Experimental JSON extensions to replace asProductXXX by generating
    * Reads[T]/Writes[T]/Format[T] from case class at COMPILE time using
@@ -184,7 +160,7 @@ object Json {
   import language.experimental.macros
 
   /**
-   * Creates a Reads[T] by resolving case class fields & required implcits at COMPILE-time.
+   * Creates a Reads[T] by resolving case class fields & required implicits at COMPILE-time.
    *
    * If any missing implicit is discovered, compiler will break with corresponding error.
    * {{{
@@ -201,10 +177,10 @@ object Json {
    *   )(User)
    * }}}
    */
-  def reads[A] = macro JsMacroImpl.readsImpl[A]
+  def reads[A]: Reads[A] = macro JsMacroImpl.readsImpl[A]
 
   /**
-   * Creates a Writes[T] by resolving case class fields & required implcits at COMPILE-time
+   * Creates a Writes[T] by resolving case class fields & required implicits at COMPILE-time
    *
    * If any missing implicit is discovered, compiler will break with corresponding error.
    * {{{
@@ -221,7 +197,7 @@ object Json {
    *   )(unlift(User.unapply))
    * }}}
    */
-  def writes[A] = macro JsMacroImpl.writesImpl[A]
+  def writes[A]: OWrites[A] = macro JsMacroImpl.writesImpl[A]
 
   /**
    * Creates a Format[T] by resolving case class fields & required implicits at COMPILE-time
@@ -241,6 +217,6 @@ object Json {
    *   )(User.apply, unlift(User.unapply))
    * }}}
    */
-  def format[A] = macro JsMacroImpl.formatImpl[A]
+  def format[A]: OFormat[A] = macro JsMacroImpl.formatImpl[A]
 
 }

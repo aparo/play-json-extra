@@ -3,6 +3,7 @@
  */
 package play.api.libs.json
 
+import play.api.libs.functional._
 import java.time.format.DateTimeFormatter
 import java.time.{
 //  Instant,
@@ -31,19 +32,18 @@ import Json._
   "No Json serializer found for type ${A}. Try to implement an implicit Writes or Format for this type."
 )
 trait Writes[-A] {
-
   /**
    * Convert the object into a JsValue
    */
   def writes(o: A): JsValue
 
   /**
-   * transforms the resulting JsValue using transformer function
+   * Transforms the resulting [[JsValue]] using transformer function
    */
   def transform(transformer: JsValue => JsValue): Writes[A] = Writes[A] { a => transformer(this.writes(a)) }
 
   /**
-   * transforms resulting JsValue using Writes[JsValue]
+   * Transforms resulting [[JsValue]] using Writes[JsValue]
    */
   def transform(transformer: Writes[JsValue]): Writes[A] = Writes[A] { a => transformer.writes(this.writes(a)) }
 
@@ -53,8 +53,19 @@ trait Writes[-A] {
   "No Json serializer as JsObject found for type ${A}. Try to implement an implicit OWrites or OFormat for this type."
 )
 trait OWrites[-A] extends Writes[A] {
-
   def writes(o: A): JsObject
+
+  /**
+   * Transforms the resulting [[JsValue]] using transformer function
+   */
+  def transform(transformer: JsObject => JsObject): OWrites[A] =
+    OWrites[A] { a => transformer(this.writes(a)) }
+
+  /**
+   * Transforms resulting [[JsValue]] using Writes[JsValue]
+   */
+  def transform(transformer: OWrites[JsObject]): OWrites[A] =
+    OWrites[A] { a => transformer.writes(this.writes(a)) }
 
 }
 
@@ -76,7 +87,6 @@ object OWrites extends PathWrites with ConstraintWrites {
   def apply[A](f: A => JsObject): OWrites[A] = new OWrites[A] {
     def writes(a: A): JsObject = f(a)
   }
-
 }
 
 /**
@@ -87,18 +97,15 @@ object Writes extends PathWrites with ConstraintWrites with DefaultWrites {
   val constraints: ConstraintWrites = this
   val path: PathWrites = this
 
-  /*implicit val contravariantfunctorWrites:ContravariantFunctor[Writes] = new ContravariantFunctor[Writes] {
+  implicit val contravariantfunctorWrites: ContravariantFunctor[Writes] = new ContravariantFunctor[Writes] {
 
-    def contramap[A,B](wa:Writes[A], f: B => A):Writes[B] = Writes[B]( b => wa.writes(f(b)) )
-
-  }*/
-
-  def apply[A](f: A => JsValue): Writes[A] = new Writes[A] {
-
-    def writes(a: A): JsValue = f(a)
+    def contramap[A, B](wa: Writes[A], f: B => A): Writes[B] = Writes[B](b => wa.writes(f(b)))
 
   }
 
+  def apply[A](f: A => JsValue): Writes[A] = new Writes[A] {
+    def writes(a: A): JsValue = f(a)
+  }
 }
 
 /**
@@ -180,22 +187,22 @@ trait DefaultWrites {
   /**
    * Serializer for Array[T] types.
    */
-  implicit def arrayWrites[T: ClassTag](implicit fmt: Writes[T]): Writes[Array[T]] = new Writes[Array[T]] {
-    def writes(ts: Array[T]) = JsArray(ts.map(t => toJson(t)(fmt)).toList)
+  implicit def arrayWrites[T: ClassTag: Writes]: Writes[Array[T]] = Writes[Array[T]] { ts =>
+    JsArray(ts.map(toJson(_)).toSeq)
   }
 
   /**
    * Serializer for Map[String,V] types.
    */
-  implicit def mapWrites[V](implicit fmtv: Writes[V]): OWrites[collection.immutable.Map[String, V]] = OWrites[collection.immutable.Map[String, V]] { ts =>
-    JsObject(ts.map { case (k, v) => (k, toJson(v)(fmtv)) }.toList)
+  implicit def mapWrites[V: Writes]: OWrites[Map[String, V]] = OWrites[Map[String, V]] { ts =>
+    JsObject(ts.mapValues(toJson(_)).toSeq)
   }
 
   /**
    * Serializer for Traversables types.
    */
-  implicit def traversableWrites[A: Writes] = new Writes[Traversable[A]] {
-    def writes(as: Traversable[A]) = JsArray(as.map(toJson(_)).toSeq)
+  implicit def traversableWrites[A: Writes] = Writes[Traversable[A]] { as =>
+    JsArray(as.map(toJson(_)).toSeq)
   }
 
   /**
@@ -299,7 +306,7 @@ trait DefaultWrites {
 
   /**
    * The default typeclass to write a `java.time.LocalDateTime`,
-   * using '2011-12-03T10:15:30' format, and default time zone.
+    * using '2011-12-03T10:15:30' format.
    */
 //  implicit val DefaultLocalDateTimeWrites =new Writes.
 //    temporalWrites[LocalDateTime, DateTimeFormatter](
@@ -307,7 +314,7 @@ trait DefaultWrites {
 
   /**
    * The default typeclass to write a `java.time.ZonedDateTime`,
-   * using '2011-12-03T10:15:30' format, and default time zone.
+   * using '2011-12-03T10:15:30+01:00[Europe/Paris]' format.
    */
 //  implicit val DefaultZonedDateTimeWrites =
 //    temporalWrites[ZonedDateTime, DateTimeFormatter](
@@ -315,7 +322,7 @@ trait DefaultWrites {
 
   /**
    * The default typeclass to write a `java.time.LocalDate`,
-   * using '2011-12-03' format, and default time zone.
+   * using '2011-12-03' format.
    */
 //  implicit val DefaultLocalDateWrites =
 //    temporalWrites[LocalDate, DateTimeFormatter](
@@ -323,7 +330,7 @@ trait DefaultWrites {
 
   /**
    * The default typeclass to write a `java.time.Instant`,
-   * using '2011-12-03T10:15:30' format, and default time zone.
+   * using '2011-12-03T10:15:30Z' format.
    */
 //  implicit val DefaultInstantWrites =
 //    temporalWrites[Instant, DateTimeFormatter](

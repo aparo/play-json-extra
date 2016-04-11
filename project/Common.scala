@@ -1,12 +1,11 @@
 import sbt._
 import Keys._
-import net.virtualvoid.sbt.graph.Plugin._
 import com.scalapenos.sbt.prompt._
 import SbtPrompt.autoImport._
 
 object Common {
 
-  val settings: Seq[Setting[_]] = graphSettings ++ Seq(
+  val settings: Seq[Setting[_]] = Seq(
     organizationName := "Paro Alberto Maria Angelo",
     organization := "io.megl",
     version := Versions.app,
@@ -78,7 +77,7 @@ object Common {
           <url>https://github.com/aparo/play-json-extra</url>
           <connection>scm:git:https://github.com/aparo/play-json-extra.git</connection>
         </scm>,
-    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0-M5" cross CrossVersion.full)//,
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)//,
     //sources in doc in Compile := List() //disable doc generation
   )
 

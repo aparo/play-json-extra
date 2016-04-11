@@ -1,4 +1,4 @@
-/* Copyright 2009-2015 - Big Data Technologies S.R.L.  All Rights Reserved. */
+/* Copyright 2009-2015 - Paro Alberto Maria Angelo  All Rights Reserved. */
 
 import sbt._
 import sbt.Keys._
@@ -6,15 +6,15 @@ import org.scalajs.sbtplugin._
 
 object Versions {
 
-  lazy val app = "2.4.3-SNAPSHOT"
+  lazy val app = "2.5.0-SNAPSHOT"
 
   //scalajs
-  lazy val upickle = "0.3.6"
-  lazy val boopickle = "1.1.0"
+  lazy val upickle = "0.3.9"
+  lazy val boopickle = "1.1.3"
   lazy val log4js = "1.4.10"
   lazy val uTest = "0.3.1"
 
-  lazy val scala = "2.11.7"
+  lazy val scala = "2.11.8"
 
   lazy val scalaTest = "2.2.5"
   lazy val scalaTestJS = "3.0.0-M7"
@@ -31,8 +31,8 @@ object Library {
 
   lazy val scalaReflect = "org.scala-lang" % "scala-reflect" % Versions.scala
 
-  lazy val jodaTime = "joda-time" % "joda-time" % "2.5"
-  lazy val jodaConvert = "org.joda" % "joda-convert" % "1.7"
+  lazy val jodaTime = "joda-time" % "joda-time" % "2.9.3"
+  lazy val jodaConvert = "org.joda" % "joda-convert" % "1.8.1"
 
   lazy val scalastm = "org.scala-stm" %% "scala-stm" % "0.7"
 
