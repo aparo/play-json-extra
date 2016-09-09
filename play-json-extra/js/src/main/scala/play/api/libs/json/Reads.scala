@@ -5,15 +5,15 @@ package play.api.libs.json
 
 import java.time.format.DateTimeFormatter
 import java.time.{
-//  Clock,
-//  Instant,
+  Clock,
+  Instant,
   LocalDate,
-  LocalDateTime//,
-//  ZoneId,
-//  ZonedDateTime
+  LocalDateTime,
+  ZoneId,
+  ZonedDateTime
 }
-//import java.time.format.{ DateTimeFormatter, DateTimeParseException }
-//import java.time.temporal.UnsupportedTemporalTypeException
+import java.time.format.{ DateTimeFormatter, DateTimeParseException }
+import java.time.temporal.UnsupportedTemporalTypeException
 
 //import play.api.libs.json.jackson.JacksonJson
 
@@ -313,15 +313,13 @@ trait DefaultReads extends LowPriorityDefaultReads {
 
   private def parseJDate(pattern: String, input: String): Option[java.util.Date] = {
     // REMEMBER THAT SIMPLEDATEFORMAT IS NOT THREADSAFE
-    //TODO paro restore
-//    val df = new java.text.SimpleDateFormat(pattern)
-//    df.setLenient(false)
-//    try { Some(df.parse(input)) } catch {
-//      case x: java.text.ParseException =>
-//        println(s"=> $pattern -> ${x.getMessage}")
-//        None
-//    }
-    None
+    val df = new java.text.SimpleDateFormat(pattern)
+    df.setLenient(false)
+    try { Some(df.parse(input)) } catch {
+      case x: java.text.ParseException =>
+        println(s"=> $pattern -> ${x.getMessage}")
+        None
+    }
   }
 
   /**
@@ -334,107 +332,107 @@ trait DefaultReads extends LowPriorityDefaultReads {
     def parse(input: String): Option[T]
   }
 
-//  /** Parsing companion */
-//  object TemporalParser {
-//    /** Instance of local date/time based on specified pattern. */
-//    implicit def LocalDateTimePatternParser(pattern: String): TemporalParser[LocalDateTime] = new TemporalParser[LocalDateTime] {
-//      def parse(input: String): Option[LocalDateTime] = try {
-//        Some(LocalDateTime.parse(input, DateTimeFormatter.ofPattern(pattern)))
-//      } catch {
-//        case _: DateTimeParseException => None
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//
-//    /** Instance of local date/time based on formatter. */
-////    implicit def LocalDateTimeFormatterParser(formatter: DateTimeFormatter): TemporalParser[LocalDateTime] = new TemporalParser[LocalDateTime] {
-//      def parse(input: String): Option[LocalDateTime] = try {
-//        Some(LocalDateTime.parse(input, formatter))
-//      } catch {
-//        case _: DateTimeParseException => None
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//
-//    /** Instance of date based on specified pattern. */
-//    implicit def DatePatternParser(pattern: String): TemporalParser[LocalDate] = new TemporalParser[LocalDate] {
-//      def parse(input: String): Option[LocalDate] = try {
-//        Some(LocalDate.parse(input, DateTimeFormatter.ofPattern(pattern)))
-//      } catch {
-//        case _: DateTimeParseException => None
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//
-//    /** Instance of date based on formatter. */
-//    implicit def DateFormatterParser(formatter: DateTimeFormatter): TemporalParser[LocalDate] = new TemporalParser[LocalDate] {
-//      def parse(input: String): Option[LocalDate] = try {
-//        Some(LocalDate.parse(input, formatter))
-//      } catch {
-//        case _: DateTimeParseException => None
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//
-//    /** Instance of instant parser based on specified pattern. */
-//    implicit def InstantPatternParser(pattern: String): TemporalParser[Instant] = new TemporalParser[Instant] {
-//      def parse(input: String): Option[Instant] = try {
-//        val time = LocalDateTime.parse(
-//          input, DateTimeFormatter.ofPattern(pattern))
-//
-//        Some(Instant parse s"${time.toString}Z")
-//      } catch {
-//        case _: DateTimeParseException => None
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//
-//    /** Instance of instant parser based on formatter. */
-//    implicit def InstantFormatterParser(formatter: DateTimeFormatter): TemporalParser[Instant] = new TemporalParser[Instant] {
-//      def parse(input: String): Option[Instant] = try {
-//        val time = LocalDateTime.parse(input, formatter)
-//        Some(Instant parse s"${time.toString}Z")
-//      } catch {
-//        case _: DateTimeParseException => None
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//
-//    /** Instance of zoned date/time based on specified pattern. */
-//    implicit def ZonedDateTimePatternParser(pattern: String): TemporalParser[ZonedDateTime] = new TemporalParser[ZonedDateTime] {
-//      def parse(input: String): Option[ZonedDateTime] = try {
-//        Some(ZonedDateTime.parse(input, DateTimeFormatter.ofPattern(pattern)))
-//      } catch {
-//        case _: DateTimeParseException => try {
-//          Some(LocalDateTime.parse(input,
-//            DateTimeFormatter.ofPattern(pattern)).atZone(ZoneId.systemDefault))
-//
-//        } catch {
-//          case _: DateTimeParseException => None
-//          case _: UnsupportedTemporalTypeException => None
-//        }
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//
-//    /** Instance of zoned date/time based on formatter. */
-//    implicit def ZonedDateTimeFormatterParser(formatter: DateTimeFormatter): TemporalParser[ZonedDateTime] = new TemporalParser[ZonedDateTime] {
-//      def parse(input: String): Option[ZonedDateTime] = try {
-//        Some(ZonedDateTime.parse(input, formatter))
-//      } catch {
-//        case _: DateTimeParseException => try {
-//          Some(LocalDateTime.parse(input, formatter).
-//            atZone(ZoneId.systemDefault))
-//
-//        } catch {
-//          case _: DateTimeParseException => None
-//          case _: UnsupportedTemporalTypeException => None
-//        }
-//        case _: UnsupportedTemporalTypeException => None
-//      }
-//    }
-//  }
+  /** Parsing companion */
+  object TemporalParser {
+    /** Instance of local date/time based on specified pattern. */
+    implicit def LocalDateTimePatternParser(pattern: String): TemporalParser[LocalDateTime] = new TemporalParser[LocalDateTime] {
+      def parse(input: String): Option[LocalDateTime] = try {
+        Some(LocalDateTime.parse(input, DateTimeFormatter.ofPattern(pattern)))
+      } catch {
+        case _: DateTimeParseException => None
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
 
+    /** Instance of local date/time based on formatter. */
+    implicit def LocalDateTimeFormatterParser(formatter: DateTimeFormatter): TemporalParser[LocalDateTime] = new TemporalParser[LocalDateTime] {
+      def parse(input: String): Option[LocalDateTime] = try {
+        Some(LocalDateTime.parse(input, formatter))
+      } catch {
+        case _: DateTimeParseException => None
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
+
+    /** Instance of date based on specified pattern. */
+    implicit def DatePatternParser(pattern: String): TemporalParser[LocalDate] = new TemporalParser[LocalDate] {
+      def parse(input: String): Option[LocalDate] = try {
+        Some(LocalDate.parse(input, DateTimeFormatter.ofPattern(pattern)))
+      } catch {
+        case _: DateTimeParseException => None
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
+
+    /** Instance of date based on formatter. */
+    implicit def DateFormatterParser(formatter: DateTimeFormatter): TemporalParser[LocalDate] = new TemporalParser[LocalDate] {
+      def parse(input: String): Option[LocalDate] = try {
+        Some(LocalDate.parse(input, formatter))
+      } catch {
+        case _: DateTimeParseException => None
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
+
+    /** Instance of instant parser based on specified pattern. */
+    implicit def InstantPatternParser(pattern: String): TemporalParser[Instant] = new TemporalParser[Instant] {
+      def parse(input: String): Option[Instant] = try {
+        val time = LocalDateTime.parse(
+          input, DateTimeFormatter.ofPattern(pattern))
+
+        Some(Instant parse s"${time.toString}Z")
+      } catch {
+        case _: DateTimeParseException => None
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
+
+    /** Instance of instant parser based on formatter. */
+    implicit def InstantFormatterParser(formatter: DateTimeFormatter): TemporalParser[Instant] = new TemporalParser[Instant] {
+      def parse(input: String): Option[Instant] = try {
+        val time = LocalDateTime.parse(input, formatter)
+        Some(Instant parse s"${time.toString}Z")
+      } catch {
+        case _: DateTimeParseException => None
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
+
+    /** Instance of zoned date/time based on specified pattern. */
+    implicit def ZonedDateTimePatternParser(pattern: String): TemporalParser[ZonedDateTime] = new TemporalParser[ZonedDateTime] {
+      def parse(input: String): Option[ZonedDateTime] = try {
+        Some(ZonedDateTime.parse(input, DateTimeFormatter.ofPattern(pattern)))
+      } catch {
+        case _: DateTimeParseException => try {
+          Some(LocalDateTime.parse(input,
+            DateTimeFormatter.ofPattern(pattern)).atZone(ZoneId.systemDefault))
+
+        } catch {
+          case _: DateTimeParseException => None
+          case _: UnsupportedTemporalTypeException => None
+        }
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
+
+    /** Instance of zoned date/time based on formatter. */
+    implicit def ZonedDateTimeFormatterParser(formatter: DateTimeFormatter): TemporalParser[ZonedDateTime] = new TemporalParser[ZonedDateTime] {
+      def parse(input: String): Option[ZonedDateTime] = try {
+        Some(ZonedDateTime.parse(input, formatter))
+      } catch {
+        case _: DateTimeParseException => try {
+          Some(LocalDateTime.parse(input, formatter).
+            atZone(ZoneId.systemDefault))
+
+        } catch {
+          case _: DateTimeParseException => None
+          case _: UnsupportedTemporalTypeException => None
+        }
+        case _: UnsupportedTemporalTypeException => None
+      }
+    }
+
+  }
   /**
    * Reads for the `java.time.LocalDateTime` type.
    *
@@ -454,6 +452,10 @@ trait DefaultReads extends LowPriorityDefaultReads {
    * }}}
    */
   def localDateTimeReads[T](parsing: T, corrector: String => String = identity)(implicit p: T => TemporalParser[LocalDateTime]): Reads[LocalDateTime] = new Reads[LocalDateTime] {
+    def epoch(millis: Long): LocalDateTime =
+      LocalDateTime.ofInstant(
+        Instant.ofEpochMilli(millis), ZoneId.systemDefault)
+
     def reads(json: JsValue): JsResult[LocalDateTime] = json match {
       case JsNumber(d) => JsSuccess(epoch(d.toLong))
       case JsString(s) => p(parsing).parse(corrector(s)) match {
@@ -465,10 +467,7 @@ trait DefaultReads extends LowPriorityDefaultReads {
         Seq(ValidationError("error.expected.date"))))
     }
 
-    @inline def epoch(millis: Long): LocalDateTime = null//
-//     LocalDateTime.ofInstant(
-//      Instant.ofEpochMilli(millis), ZoneId.systemDefault)
-//  }
+  }
 
   /**
    * The default typeclass to reads `java.time.LocalDateTime` from JSON.
@@ -490,7 +489,7 @@ trait DefaultReads extends LowPriorityDefaultReads {
         Seq(ValidationError("error.expected.date"))))
     }
   }
-  }
+//  }
 //    localDateTimeReads(DateTimeFormatter.ISO_DATE_TIME)
 
   /**
@@ -513,22 +512,22 @@ trait DefaultReads extends LowPriorityDefaultReads {
    *   DateTimeFormatter.ISO_DATE_TIME, _.drop(1))
    * }}}
    */
-//  def zonedDateTimeReads[T](parsing: T, corrector: String => String = identity)(implicit p: T => TemporalParser[ZonedDateTime]): Reads[ZonedDateTime] = new Reads[ZonedDateTime] {
-//
-//    def reads(json: JsValue): JsResult[ZonedDateTime] = json match {
-//      case JsNumber(d) => JsSuccess(epoch(d.toLong))
-//      case JsString(s) => p(parsing).parse(corrector(s)) match {
-//        case Some(d) => JsSuccess(d)
-//        case None => JsError(Seq(JsPath() ->
-//          Seq(ValidationError("error.expected.date.isoformat", parsing))))
-//      }
-//      case _ => JsError(Seq(JsPath() ->
-//        Seq(ValidationError("error.expected.date"))))
-//    }
-//
-//    @inline def epoch(millis: Long): ZonedDateTime = ZonedDateTime.ofInstant(
-//      Instant.ofEpochMilli(millis), ZoneId.systemDefault)
-//  }
+  def zonedDateTimeReads[T](parsing: T, corrector: String => String = identity)(implicit p: T => TemporalParser[ZonedDateTime]): Reads[ZonedDateTime] = new Reads[ZonedDateTime] {
+
+    def reads(json: JsValue): JsResult[ZonedDateTime] = json match {
+      case JsNumber(d) => JsSuccess(epoch(d.toLong))
+      case JsString(s) => p(parsing).parse(corrector(s)) match {
+        case Some(d) => JsSuccess(d)
+        case None => JsError(Seq(JsPath() ->
+          Seq(ValidationError("error.expected.date.isoformat", parsing))))
+      }
+      case _ => JsError(Seq(JsPath() ->
+        Seq(ValidationError("error.expected.date"))))
+    }
+
+    @inline def epoch(millis: Long): ZonedDateTime = ZonedDateTime.ofInstant(
+      Instant.ofEpochMilli(millis), ZoneId.systemDefault)
+  }
 
   /**
    * The default typeclass to reads `java.time.ZonedDateTime` from JSON.
@@ -553,29 +552,29 @@ trait DefaultReads extends LowPriorityDefaultReads {
    * val customReads3 = localDateReads(DateTimeFormatter.ISO_DATE, _.drop(1))
    * }}}
    */
-//  def localDateReads[T](parsing: T, corrector: String => String = identity)(implicit p: T => TemporalParser[LocalDate]): Reads[LocalDate] =
-//    new Reads[LocalDate] {
-//      def reads(json: JsValue): JsResult[LocalDate] = json match {
-//        case JsNumber(d) => JsSuccess(epoch(d.toLong))
-//        case JsString(s) => p(parsing).parse(corrector(s)) match {
-//          case Some(d) => JsSuccess(d)
-//          case None => JsError(Seq(JsPath() ->
-//            Seq(ValidationError("error.expected.date.isoformat", parsing))))
-//        }
-//        case _ => JsError(Seq(JsPath() ->
-//          Seq(ValidationError("error.expected.date"))))
-//      }
-//
-//      @inline def epoch(millis: Long): LocalDate = LocalDate.now(
-//        Clock.fixed(Instant.ofEpochMilli(millis), ZoneId.systemDefault))
-//    }
+  def localDateReads[T](parsing: T, corrector: String => String = identity)(implicit p: T => TemporalParser[LocalDate]): Reads[LocalDate] =
+    new Reads[LocalDate] {
+      def reads(json: JsValue): JsResult[LocalDate] = json match {
+        case JsNumber(d) => JsSuccess(epoch(d.toLong))
+        case JsString(s) => p(parsing).parse(corrector(s)) match {
+          case Some(d) => JsSuccess(d)
+          case None => JsError(Seq(JsPath() ->
+            Seq(ValidationError("error.expected.date.isoformat", parsing))))
+        }
+        case _ => JsError(Seq(JsPath() ->
+          Seq(ValidationError("error.expected.date"))))
+      }
+
+      @inline def epoch(millis: Long): LocalDate = LocalDate.now(
+        Clock.fixed(Instant.ofEpochMilli(millis), ZoneId.systemDefault))
+    }
 
   /**
    * The default typeclass to reads `java.time.LocalDate` from JSON.
    * Accepts date formats as '2011-12-03'.
    */
-//  implicit val DefaultLocalDateReads =
-//    localDateReads(DateTimeFormatter.ISO_DATE)
+  implicit val DefaultLocalDateReads =
+    localDateReads(DateTimeFormatter.ISO_DATE)
 
   /**
    * Reads for the `java.time.Instant` type.
@@ -593,26 +592,26 @@ trait DefaultReads extends LowPriorityDefaultReads {
    * val customReads3 = instantReads(DateTimeFormatter.ISO_INSTANT, _.drop(1))
    * }}}
    */
-//  def instantReads[T](parsing: T, corrector: String => String = identity)(implicit p: T => TemporalParser[Instant]): Reads[Instant] =
-//    new Reads[Instant] {
-//      def reads(json: JsValue): JsResult[Instant] = json match {
-//        case JsNumber(d) => JsSuccess(Instant ofEpochMilli d.toLong)
-//        case JsString(s) => p(parsing).parse(corrector(s)) match {
-//          case Some(d) => JsSuccess(d)
-//          case None => JsError(Seq(JsPath() ->
-//            Seq(ValidationError("error.expected.date.isoformat", parsing))))
-//        }
-//        case _ => JsError(Seq(JsPath() ->
-//          Seq(ValidationError("error.expected.date"))))
-//      }
-//    }
-//
-//  /**
-//   * The default typeclass to reads `java.time.Instant` from JSON.
-//   * Accepts instant formats as '2011-12-03T10:15:30', '2011-12-03T10:15:30+01:00' or '2011-12-03T10:15:30+01:00[Europe/Paris]'.
-//   */
-//  implicit val DefaultInstantReads =
-//    instantReads(DateTimeFormatter.ISO_DATE_TIME)
+  def instantReads[T](parsing: T, corrector: String => String = identity)(implicit p: T => TemporalParser[Instant]): Reads[Instant] =
+    new Reads[Instant] {
+      def reads(json: JsValue): JsResult[Instant] = json match {
+        case JsNumber(d) => JsSuccess(Instant ofEpochMilli d.toLong)
+        case JsString(s) => p(parsing).parse(corrector(s)) match {
+          case Some(d) => JsSuccess(d)
+          case None => JsError(Seq(JsPath() ->
+            Seq(ValidationError("error.expected.date.isoformat", parsing))))
+        }
+        case _ => JsError(Seq(JsPath() ->
+          Seq(ValidationError("error.expected.date"))))
+      }
+    }
+
+  /**
+   * The default typeclass to reads `java.time.Instant` from JSON.
+   * Accepts instant formats as '2011-12-03T10:15:30', '2011-12-03T10:15:30+01:00' or '2011-12-03T10:15:30+01:00[Europe/Paris]'.
+   */
+  implicit val DefaultInstantReads =
+    instantReads(DateTimeFormatter.ISO_DATE_TIME)
 
   /**
    * ISO 8601 Reads
@@ -657,11 +656,12 @@ trait DefaultReads extends LowPriorityDefaultReads {
    */
   def jodaDateReads(pattern: String, corrector: String => String = identity): Reads[org.joda.time.DateTime] = new Reads[org.joda.time.DateTime] {
     import org.joda.time.DateTime
+    import org.joda.time.ZoneOffset
 
-    val df = org.joda.time.format.DateTimeFormat.forPattern(pattern)
+    val df = org.joda.time.format.DateTimeFormatter.ofPattern(pattern)
 
     def reads(json: JsValue): JsResult[DateTime] = json match {
-      case JsNumber(d) => JsSuccess(new DateTime(d.toLong))
+      case JsNumber(d) => JsSuccess(DateTime.ofEpochSecond(d.toLong,0, ZoneOffset.UTC))
       case JsString(s) => parseDate(corrector(s)) match {
         case Some(d) => JsSuccess(d)
         case None => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jodadate.format", pattern))))
@@ -688,9 +688,8 @@ trait DefaultReads extends LowPriorityDefaultReads {
   def jodaLocalDateReads(pattern: String, corrector: String => String = identity): Reads[org.joda.time.LocalDate] = new Reads[org.joda.time.LocalDate] {
 
     import org.joda.time.LocalDate
-    import org.joda.time.format.{ DateTimeFormat, ISODateTimeFormat }
 
-    val df = if (pattern == "") ISODateTimeFormat.localDateParser else DateTimeFormat.forPattern(pattern)
+    val df = if (pattern == "") org.joda.time.format.DateTimeFormatter.ISO_LOCAL_DATE else org.joda.time.format.DateTimeFormatter.ofPattern(pattern)
 
     def reads(json: JsValue): JsResult[LocalDate] = json match {
       case JsString(s) => parseDate(corrector(s)) match {
@@ -709,38 +708,38 @@ trait DefaultReads extends LowPriorityDefaultReads {
    */
   implicit val DefaultJodaLocalDateReads = jodaLocalDateReads("")
 
-//  //TODO restore
-//  /**
-//   * Reads for the `org.joda.time.LocalTime` type.
-//   *
-//   * @param pattern a date pattern, as specified in `org.joda.time.format.DateTimeFormat`.
-//   * @param corrector string transformation function (See jodaTimeReads)
-//   */
-//  def jodaLocalTimeReads(pattern: String, corrector: String => String = identity): Reads[org.joda.time.LocalTime] = new Reads[org.joda.time.LocalTime] {
-//
-//    import org.joda.time.LocalTime
-//    import org.joda.time.format.{ DateTimeFormat, ISODateTimeFormat }
-//
-//    val df = if (pattern == "") ISODateTimeFormat.localTimeParser else DateTimeFormat.forPattern(pattern)
-//
-//    def reads(json: JsValue): JsResult[LocalTime] = json match {
-//      case JsNumber(n) => JsSuccess(new LocalTime(n.toLong))
-//      case JsString(s) => parseTime(corrector(s)) match {
-//        case Some(d) => JsSuccess(d)
-//        case None => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jodatime.format", pattern))))
-//      }
-//      case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.time"))))
-//    }
-//
-//    private def parseTime(input: String): Option[LocalTime] =
-//      scala.util.control.Exception.allCatch[LocalTime] opt (LocalTime.parse(input, df))
-//  }
+  //TODO restore
+  /**
+   * Reads for the `org.joda.time.LocalTime` type.
+   *
+   * @param pattern a date pattern, as specified in `org.joda.time.format.DateTimeFormat`.
+   * @param corrector string transformation function (See jodaTimeReads)
+   */
+  def jodaLocalTimeReads(pattern: String, corrector: String => String = identity): Reads[org.joda.time.LocalTime] = new Reads[org.joda.time.LocalTime] {
 
-//  /**
-//   * the default implicit joda.time.LocalTime reads
-//   */
-//  implicit val DefaultJodaLocalTimeReads = jodaLocalTimeReads("")
-//
+    import org.joda.time.LocalTime
+    import org.joda.time.format.{ DateTimeFormatter }
+
+    val df = if (pattern == "") DateTimeFormatter.ISO_LOCAL_TIME else DateTimeFormatter.ofPattern(pattern)
+
+    def reads(json: JsValue): JsResult[LocalTime] = json match {
+      case JsNumber(n) => JsSuccess(LocalTime.ofSecondOfDay(n.toLong))
+      case JsString(s) => parseTime(corrector(s)) match {
+        case Some(d) => JsSuccess(d)
+        case None => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.jodatime.format", pattern))))
+      }
+      case _ => JsError(Seq(JsPath() -> Seq(ValidationError("error.expected.time"))))
+    }
+
+    private def parseTime(input: String): Option[LocalTime] =
+      scala.util.control.Exception.allCatch[LocalTime] opt (LocalTime.parse(input, df))
+  }
+
+  /**
+   * the default implicit joda.time.LocalTime reads
+   */
+  implicit val DefaultJodaLocalTimeReads = jodaLocalTimeReads("")
+
   /**
    * Reads for the `java.sql.Date` type.
    *

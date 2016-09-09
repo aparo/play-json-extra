@@ -1,34 +1,28 @@
 package java.time
 
-import temporal.{TemporalUnit, TemporalField, Temporal}
+import java.Wraps
 
-trait Clock {
-  def instant:Instant
-  def getZone():ZoneId
-  def withZone(zone: ZoneId): Clock
-  def isSupported(unit: TemporalUnit): Boolean
-  def plus(amountToAdd: Long, unit: TemporalUnit): Temporal
-  def until(endExclusive: Temporal, unit: TemporalUnit): Long
-  def `with`(field: TemporalField, newValue: Long): Temporal
-  def isSupported(field: TemporalField): Boolean
-  def getLong(field: TemporalField): Long
+import com.zoepepper.facades.jsjoda.{Clock => ClockF}
+import com.zoepepper.facades.jsjoda.{ZoneOffset => ZoneOffsetF}
+
+object Clock extends {
+  def fixed(fixedInstant: Instant, zone: ZoneId): Clock = ClockF.fixed(fixedInstant, zone.asInstanceOf[ZoneOffset])
+  def offset(baseClock: Clock, offsetDuration: Duration): Clock = ???
+  def systemUTC(): Clock = ClockF.systemUTC()
+  def systemDefaultZone(): Clock = ClockF.systemDefaultZone()
+  def system(zone: ZoneId): Clock = ClockF.system(zone)
+  def tick(baseClock: Clock, tickDuration: Duration): Clock = ???
+  def tickMinutes(zone: ZoneId): Clock = ???
+  def tickSeconds(zone: ZoneId): Clock = ???
 }
 
-object Clock {
-  def fixed(instant: Instant, zone: ZoneId)=  new FixedClock(instant, zone)
-  def system(zone: ZoneId)=  new FixedClock(Instant.now(), zone)
+class Clock protected[time](f: ClockF) extends Wraps(f) {
+  def millis(): Long = f.millis.toLong
+  def instant(): Instant = f.instant
+  def getZone(): ZoneId = f.zone.asInstanceOf[ZoneOffsetF]
+  def withZone(zone: ZoneId): Clock = ???
 
-}
-
-case class FixedClock(instant: Instant, zone: ZoneId) extends Temporal with Clock {
-
-  override def getZone: ZoneId = zone
-  override def withZone(zone: ZoneId): Clock = new FixedClock(this.instant, zone)
-  override def isSupported(unit: TemporalUnit): Boolean = ???
-  override def plus(amountToAdd: Long, unit: TemporalUnit): Temporal = ???
-  override def until(endExclusive: Temporal, unit: TemporalUnit): Long = ???
-  override def `with`(field: TemporalField, newValue: Long): Temporal = ???
-  override def isSupported(field: TemporalField): Boolean = ???
-  override def getLong(field: TemporalField): Long = ???
-
+  override def toString(): String = f.toString()
+  override def hashCode(): Int = f.hashCode()
+  override def equals(obj: Any): Boolean = f.equals(obj)
 }

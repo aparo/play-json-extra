@@ -15,15 +15,17 @@ trait Applicative[M[_]] {
 
 object Applicative {
 
-  implicit val applicativeOption: Applicative[Option] = new Applicative[Option] {
+  implicit val applicativeOption: Applicative[Option] =
+    new Applicative[Option] {
 
-    def pure[A](a: A): Option[A] = Some(a)
+      def pure[A](a: A): Option[A] = Some(a)
 
-    def map[A, B](m: Option[A], f: A => B): Option[B] = m.map(f)
+      def map[A, B](m: Option[A], f: A => B): Option[B] = m.map(f)
 
-    def apply[A, B](mf: Option[A => B], ma: Option[A]): Option[B] = mf.flatMap(f => ma.map(f))
+      def apply[A, B](mf: Option[A => B], ma: Option[A]): Option[B] =
+        mf.flatMap(f => ma.map(f))
 
-  }
+    }
 
 }
 
@@ -36,5 +38,6 @@ class ApplicativeOps[M[_], A](ma: M[A])(implicit a: Applicative[M]) {
   def keepAnd[B](mb: M[B]): M[A] = <~(mb)
 
   def <~>[B, C](mb: M[B])(implicit witness: <:<[A, B => C]): M[C] = apply(mb)
-  def apply[B, C](mb: M[B])(implicit witness: <:<[A, B => C]): M[C] = a(a.map(ma, witness), mb)
+  def apply[B, C](mb: M[B])(implicit witness: <:<[A, B => C]): M[C] =
+    a(a.map(ma, witness), mb)
 }

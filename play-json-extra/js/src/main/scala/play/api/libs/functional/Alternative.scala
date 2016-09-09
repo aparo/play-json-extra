@@ -21,4 +21,3 @@ class AlternativeOps[M[_], A](alt1: M[A])(implicit a: Alternative[M]) {
   def or[B >: A](alt2: M[B]): M[B] = |(alt2)
 
 }
-

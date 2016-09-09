@@ -3,29 +3,34 @@
 import sbt._
 import sbt.Keys._
 import org.scalajs.sbtplugin._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object Versions {
 
-  lazy val app = "2.5.0-SNAPSHOT"
+  lazy val app = "2.5.6"
 
   //scalajs
-  lazy val upickle = "0.3.9"
-  lazy val boopickle = "1.1.3"
+  lazy val upickle = "0.4.2"
+  lazy val boopickle = "1.2.4"
   lazy val log4js = "1.4.10"
   lazy val uTest = "0.3.1"
 
   lazy val scala = "2.11.8"
 
-  lazy val scalaTest = "2.2.5"
-  lazy val scalaTestJS = "3.0.0-M7"
+  lazy val scalaTest = "3.0.0"
 
   lazy val play = _root_.play.core.PlayVersion.current
-  lazy val specs2 = "3.6.4"
+  lazy val specs2 = "3.8.4"
 
 }
 
 
 object Library {
+
+lazy val scalaJavaLocales = Def.setting("com.github.cquiroz" %%% "scala-java-locales" % "0.3.0+29")
+lazy val jsjoda = Def.setting("com.zoepepper" %%% "scalajs-jsjoda" % "1.0.4")
+lazy val jsjodaJavaTime = Def.setting("com.zoepepper" %%% "scalajs-jsjoda-as-java-time" % "1.0.4")
+
 
   lazy val scalaCompiler = "org.scala-lang" % "scala-compiler" % Versions.scala
 

@@ -8,10 +8,10 @@ import play.json.extra.Picklers._
 class JsonFormatterTests extends FunSuite {
 
   @JsonFormat
-  case class TestDataTime(dt: DateTime, children: List[TestDataTime] = Nil)
+  final case class TestDataTime(dt: DateTime, children: List[TestDataTime] = Nil)
 
   @JsonFormat
-  case class DefaultTest(@key("ok1") a1: Int = 1, @key("ok2") a2: Int = 2, @key("ok3") a3: Int = 3, @key("ok4") a4: Int = 4,
+  final case class DefaultTest(@key("ok1") a1: Int = 1, @key("ok2") a2: Int = 2, @key("ok3") a3: Int = 3, @key("ok4") a4: Int = 4,
                          @key("ok5") a5: Int = 5, @key("ok6") a6: Int = 6, @key("ok7") a7: Int = 7, @key("ok8") a8: Int = 8,
                          @key("ok9") a9: Int = 9, @key("ok10") a10: Int = 10,
                          @key("ok11") a11: Int = 11, @key("ok12") a12: Int = 12, @key("ok13") a13: Int = 13, @key("ok14") a14: Int = 14,
@@ -27,7 +27,8 @@ class JsonFormatterTests extends FunSuite {
     val ts = TestDataTime(dt)
     val json = Json.toJson(ts)
     println(Json.stringify(json))
-    assert(Json.stringify(json) === """{"dt":"2015-08-11T12:01:02.003","children":[]}""")
+    assert(Json.stringify(json) === """{"dt":"2015-08-11T12:01:02.003+02:00","children":[]}""")
+    assert(json.as[TestDataTime].dt === dt)
   }
 
   test("default test key + >21 fields + des/ser") {

@@ -10,7 +10,7 @@ object DateTimeUTests extends TestSuite {
      "testSuccess" - {
        import boopickle.Default._
        import play.json.extra.Picklers._
-       case class TestDataTime(dt:DateTime)
+       final case class TestDataTime(dt:DateTime)
        val dt = new DateTime(2015, 8, 11, 12, 1, 2, 3)
        val ts=TestDataTime(dt)
        val bb = Pickle.intoBytes(ts)
