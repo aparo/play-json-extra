@@ -11,7 +11,6 @@ object Common {
     version := Versions.app,
     scalaVersion := Versions.scala,
     autoScalaLibrary := false,
-    ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
     parallelExecution := false,
     scalacOptions ++= Seq(
       "-encoding", "UTF-8", "-target:jvm-1.8", 
@@ -38,13 +37,6 @@ object Common {
     promptTheme := ScalapenosTheme,
     //    additionalLibs in Dist := file("sigar").listFiles.filter(f => !f.isDirectory),
     logBuffered := false,
-    historyPath <<= baseDirectory({
-      t => //println(t);
-        val historyDir = new File(System.getProperty("user.home")) / ".sbt_history"
-        if (!historyDir.exists())
-          historyDir.mkdir()
-        Some(historyDir / t.getAbsolutePath.replace("/", "-").substring(1))
-    }),
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
       if (isSnapshot.value)
@@ -56,9 +48,6 @@ object Common {
     publishArtifact in Test := false,
     pomIncludeRepository := {
       _ => false
-    },
-    makePomConfiguration ~= {
-      _.copy(configurations = Some(Seq(Compile, Runtime)))
     },
     homepage := Some(url("http://www.megl.io")),
     startYear := Some(2015),
@@ -77,7 +66,7 @@ object Common {
           <url>https://github.com/aparo/play-json-extra</url>
           <connection>scm:git:https://github.com/aparo/play-json-extra.git</connection>
         </scm>,
-    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)//,
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)//,
     //sources in doc in Compile := List() //disable doc generation
   )
 

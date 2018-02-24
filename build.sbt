@@ -1,6 +1,4 @@
-import SonatypeKeys._
-
-sonatypeSettings
+//publishTo := sonatypePublishTo.value
 
 Common.settings
 
@@ -15,7 +13,7 @@ val scalaJSJodaTime = project.in(file("scalajs-joda-time"))
     libraryDependencies ++=
       Seq(
         "org.scalatest" %%% "scalatest" % Versions.scalaTestJS % "test",
-        "com.lihaoyi" %%% "utest" % "0.3.1" % "test"),
+        "com.lihaoyi" %%% "utest" % "0.6.3" % "test"),
     jsDependencies += (ProvidedJS / "moment-with-locales.min.js") % Test,
     jsDependencies += RuntimeDOM % Test,
     requiresDOM := true
@@ -33,7 +31,7 @@ val playJsonExtra = crossProject.in(file("play-json-extra"))
         "com.lihaoyi" %%% "upickle" % Versions.upickle,
         "me.chrons" %%% "boopickle" % Versions.boopickle,
         "org.scalatest" %%% "scalatest" % Versions.scalaTestJS % "test",
-        "com.lihaoyi" %%% "utest" % "0.3.1" % "test") ++
+        "com.lihaoyi" %%% "utest" % "0.6.3" % "test") ++
       DependencyHelpers.provided(Library.scalaReflect)
   )
   .jsSettings(

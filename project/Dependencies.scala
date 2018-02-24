@@ -6,21 +6,21 @@ import org.scalajs.sbtplugin._
 
 object Versions {
 
-  lazy val app = "2.5.0-SNAPSHOT"
+  lazy val app = "2.6.8"
 
   //scalajs
-  lazy val upickle = "0.3.9"
-  lazy val boopickle = "1.1.3"
+  lazy val upickle = "0.5.1"
+  lazy val boopickle = "1.2.5"
   lazy val log4js = "1.4.10"
   lazy val uTest = "0.3.1"
 
-  lazy val scala = "2.11.8"
+  lazy val scala = "2.12.4"
 
-  lazy val scalaTest = "2.2.5"
-  lazy val scalaTestJS = "3.0.0-M7"
+  lazy val scalaTest = "3.0.5"
+  lazy val scalaTestJS = "3.0.5"
 
   lazy val play = _root_.play.core.PlayVersion.current
-  lazy val specs2 = "3.6.4"
+  lazy val specs2 = "3.9.5"
 
 }
 
@@ -34,9 +34,9 @@ object Library {
   lazy val jodaTime = "joda-time" % "joda-time" % "2.9.3"
   lazy val jodaConvert = "org.joda" % "joda-convert" % "1.8.1"
 
-  lazy val scalastm = "org.scala-stm" %% "scala-stm" % "0.7"
+  lazy val scalastm = "org.scala-stm" %% "scala-stm" % "0.8"
 
-  lazy val jawnParser = "org.spire-math" %% "jawn-parser" % "0.7.0"
+  lazy val jawnParser = "org.spire-math" %% "jawn-parser" % "0.11.1"
 
   lazy val specs2 = "org.specs2" %% "specs2-core" % Versions.specs2
   // "test"
