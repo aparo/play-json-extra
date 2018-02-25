@@ -290,7 +290,7 @@ object JsonFormatMacro {
         if (!mod.existsImplicit("jsonFmt")) {
 
           mod.addMethod(q"""import play.json.extra._;""")
-          mod.addMethod(q"""import play.json.extra.tuples._;""")
+//          mod.addMethod(q"""import play.json.extra.tuples._;""")
           mod.addMethod(
               q"""implicit def jsonFmt: play.api.libs.json.Format[${typeToType(
               typeName.toString)}] = Jsonx.formatCaseClassUseDefaults[${typeToType(

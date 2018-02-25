@@ -9,7 +9,6 @@ resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releas
 resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 resolvers += Resolver.sonatypeRepo("public")
 
-addSbtPlugin("com.typesafe.play"  % "sbt-plugin"            % "2.6.8")
 addSbtPlugin("com.eed3si9n"       % "sbt-unidoc"            % "0.4.1")
 addSbtPlugin("com.github.gseitz"  % "sbt-release"           % "1.0.6")
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"           % "0.6.22")

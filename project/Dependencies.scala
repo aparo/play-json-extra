@@ -19,8 +19,8 @@ object Versions {
   lazy val scalaTest = "3.0.5"
   lazy val scalaTestJS = "3.0.5"
 
-  lazy val play = _root_.play.core.PlayVersion.current
-  lazy val specs2 = "3.9.5"
+  lazy val playJson = "2.7.0-SNAPSHOT"
+  lazy val specs2 = "4.0.2"
 
 }
 
@@ -31,12 +31,7 @@ object Library {
 
   lazy val scalaReflect = "org.scala-lang" % "scala-reflect" % Versions.scala
 
-  lazy val jodaTime = "joda-time" % "joda-time" % "2.9.3"
-  lazy val jodaConvert = "org.joda" % "joda-convert" % "1.8.1"
-
   lazy val scalastm = "org.scala-stm" %% "scala-stm" % "0.8"
-
-  lazy val jawnParser = "org.spire-math" %% "jawn-parser" % "0.11.1"
 
   lazy val specs2 = "org.specs2" %% "specs2-core" % Versions.specs2
   // "test"

@@ -1,14 +1,14 @@
 package play.json.extra
 
-import org.joda.time.DateTime
+import java.time.LocalDateTime
+
 import org.scalatest.FunSuite
 import play.api.libs.json.{JsObject, Json}
-import play.json.extra.Picklers._
 
 class JsonFormatterTests extends FunSuite {
 
   @JsonFormat
-  final case class TestDataTime(dt: DateTime, children: List[TestDataTime] = Nil)
+  final case class TestDataTime(dt: LocalDateTime, children: List[TestDataTime] = Nil)
 
   @JsonFormat
   final case class DefaultTest(@key("ok1") a1: Int = 1, @key("ok2") a2: Int = 2, @key("ok3") a3: Int = 3, @key("ok4") a4: Int = 4,
@@ -23,11 +23,11 @@ class JsonFormatterTests extends FunSuite {
                           )
 
   test("basic datetime test") {
-    val dt = new DateTime(2015, 8, 11, 12, 1, 2, 3)
+    val dt = LocalDateTime.of(2015, 8, 11, 12, 1, 2, 3)
     val ts = TestDataTime(dt)
     val json = Json.toJson(ts)
     println(Json.stringify(json))
-    assert(Json.stringify(json) === """{"dt":"2015-08-11T12:01:02.003+02:00","children":[]}""")
+    assert(Json.stringify(json) === """{"dt":"2015-08-11T12:01:02.000000003","children":[]}""")
     assert(json.as[TestDataTime].dt === dt)
   }
 
