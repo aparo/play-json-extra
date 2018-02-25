@@ -15,8 +15,7 @@ val scalaJSJodaTime = project.in(file("scalajs-joda-time"))
         "org.scalatest" %%% "scalatest" % Versions.scalaTestJS % "test",
         "com.lihaoyi" %%% "utest" % "0.6.3" % "test"),
     jsDependencies += (ProvidedJS / "moment-with-locales.min.js") % Test,
-    jsDependencies += RuntimeDOM % Test,
-    requiresDOM := true
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
   )
 
 val playJsonExtra = crossProject.in(file("play-json-extra"))
@@ -29,22 +28,21 @@ val playJsonExtra = crossProject.in(file("play-json-extra"))
     libraryDependencies ++= DependencyHelpers.compile(Library.scalastm, Library.scalaCompiler) ++
       Seq(
         "com.lihaoyi" %%% "upickle" % Versions.upickle,
-        "me.chrons" %%% "boopickle" % Versions.boopickle,
+        "io.suzaku" %%% "boopickle" % Versions.boopickle,
+        "com.typesafe.play" %%% "play-functional" % _root_.play.core.PlayVersion.current,
+        "com.typesafe.play" %%% "play-json" % _root_.play.core.PlayVersion.current,
         "org.scalatest" %%% "scalatest" % Versions.scalaTestJS % "test",
         "com.lihaoyi" %%% "utest" % "0.6.3" % "test") ++
       DependencyHelpers.provided(Library.scalaReflect)
   )
   .jsSettings(
     jsDependencies += (ProvidedJS / "moment-with-locales.min.js") % Test,
-    jsDependencies += RuntimeDOM % Test,
-    requiresDOM := true
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
   )
   .jvmSettings(
     libraryDependencies ++= DependencyHelpers.compile(
-      Library.jawnParser,
-      Library.playJson
+      Library.jawnParser
     ) ++ DependencyHelpers.test(
-      Library.scalatest,
       Library.specs2
     )
   )

@@ -1,8 +1,8 @@
-/* Copyright 2009-2015 - Paro Alberto Maria Angelo  All Rights Reserved. */
+/* Copyright 2009-2017 - Paro Alberto Maria Angelo  All Rights Reserved. */
 
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import sbt.Keys.libraryDependencies
 import sbt._
-import sbt.Keys._
-import org.scalajs.sbtplugin._
 
 object Versions {
 
@@ -43,8 +43,6 @@ object Library {
   lazy val specs2Junit = "org.specs2" %% "specs2-junit" % Versions.specs2
   // "test"
   lazy val specs2ScalaCheck = "org.specs2" %% "specs2-scalacheck" % Versions.specs2 // "test"
-
-  lazy val playJson = "com.typesafe.play" %% "play-json" % Versions.play
 
   lazy val scalatest = "org.scalatest" %% "scalatest" % Versions.scalaTest
 
