@@ -24,10 +24,10 @@ class LocalDatetimeTests extends FunSuite {
     val dt = LocalDateTime.of(2015, 8, 11, 12, 1, 2, 3)
     val ts=TestDataTime(dt)
     val json = Json.stringify(Json.toJson(ts))
-    println(json)
+//    println(json)
     val ts2=Json.parse(json).as[TestDataTime]
-    println(s"${ts.toString} ${ts2.toString}")
-    println(s"${ts.dt.toString()} ${ts2.dt.toString()}")
+//    println(s"${ts.toString} ${ts2.toString}")
+//    println(s"${ts.dt.toString()} ${ts2.dt.toString()}")
 
 //    assert(ts === ts2)
     assert(ts2.dt.getYear === 2015)

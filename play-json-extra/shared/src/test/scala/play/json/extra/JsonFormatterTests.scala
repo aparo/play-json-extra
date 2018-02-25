@@ -26,7 +26,7 @@ class JsonFormatterTests extends FunSuite {
     val dt = LocalDateTime.of(2015, 8, 11, 12, 1, 2, 3)
     val ts = TestDataTime(dt)
     val json = Json.toJson(ts)
-    println(Json.stringify(json))
+//    println(Json.stringify(json))
     assert(Json.stringify(json) === """{"dt":"2015-08-11T12:01:02.000000003","children":[]}""")
     assert(json.as[TestDataTime].dt === dt)
   }
