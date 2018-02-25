@@ -1,32 +1,17 @@
 package java.time.temporal
 
-import _root_.java.time.{Clock, ZoneId}
+import java.Wrapper
 
-/**
- * Created by alberto on 07/06/15.
- */
-trait Temporal {
-  def isSupported(unit: TemporalUnit): Boolean=true
+import com.zoepepper.facades.jsjoda.temporal.{Temporal => TemporalF}
 
-  def plus(amountToAdd: Long, unit: TemporalUnit): Temporal=null
+trait Temporal extends TemporalAccessor { self: Wrapper =>
+  protected[time] val temporalF = self.f.asInstanceOf[TemporalF]
 
-  def until(endExclusive: Temporal, unit: TemporalUnit): Long
-
-  def `with`(field: TemporalField, newValue: Long): Temporal=null
-
-  def getZone: ZoneId=null
-
-  def withZone(zone: ZoneId): Clock=null
-
-  def isSupported(field: TemporalField): Boolean=true
-
-  def getLong(field: TemporalField): Long=0L
-}
-
-trait TemporalUnit {
-
-}
-
-trait TemporalField {
-
+  def minus(amountToSubtract: Long, unit: TemporalUnit): Temporal
+  def minus(amount: TemporalAmount): Temporal
+  def plus(amountToAdd: Long, unit: TemporalUnit): Temporal
+  def plus(amount: TemporalAmount): Temporal
+  def until(endExclusive: Temporal, unit: TemporalUnit): Long = temporalF.until(endExclusive, unit).toLong
+  def `with`(adjuster: TemporalAdjuster): Temporal
+  def `with`(field: TemporalField, newValue: Long): Temporal
 }

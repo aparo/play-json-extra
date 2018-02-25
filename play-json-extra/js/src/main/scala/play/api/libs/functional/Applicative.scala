@@ -1,6 +1,7 @@
 /*
- * Copyright (C) 2009-2016 Lightbend Inc. <https://www.lightbend.com>
+ * Copyright (C) 2009-2018 Lightbend Inc. <https://www.lightbend.com>
  */
+
 package play.api.libs.functional
 
 import scala.language.higherKinds
@@ -17,13 +18,13 @@ object Applicative {
 
   implicit val applicativeOption: Applicative[Option] = new Applicative[Option] {
 
-    def pure[A](a: A): Option[A] = Some(a)
+      def pure[A](a: A): Option[A] = Some(a)
 
-    def map[A, B](m: Option[A], f: A => B): Option[B] = m.map(f)
+      def map[A, B](m: Option[A], f: A => B): Option[B] = m.map(f)
 
     def apply[A, B](mf: Option[A => B], ma: Option[A]): Option[B] = mf.flatMap(f => ma.map(f))
 
-  }
+    }
 
 }
 

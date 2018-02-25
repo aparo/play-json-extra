@@ -7,7 +7,7 @@ import boopickle.Default._
 import play.json.extra.Picklers._
 
 class DatetimeTests extends FunSuite {
-  case class TestDataTime(dt:DateTime)
+  final case class TestDataTime(dt:DateTime)
   implicit val jsonFmt=Json.format[TestDataTime]
 
   test("basic datetime test") {

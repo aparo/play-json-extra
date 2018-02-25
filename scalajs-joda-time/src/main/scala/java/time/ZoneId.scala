@@ -1,38 +1,34 @@
 package java.time
 
-case class ZoneId(code:String) {
+import java.Wrapper
+import java.time.format.TextStyle
+import java.time.temporal.TemporalAccessor
+import java.time.zone.ZoneRules
+import java.util.Locale
 
-}
+import com.zoepepper.facades.jsjoda.{ZoneId => ZoneIdF}
+import com.zoepepper.facades.jsjoda.{ZoneOffset => ZoneOffsetF}
 
 object ZoneId {
-  val SHORT_IDS = Map(
-    "ACT" -> "Australia/Darwin",
-    "AET" -> "Australia/Sydney",
-    "AGT" -> "America/Argentina/Buenos_Aires",
-    "ART" -> "Africa/Cairo",
-    "AST" -> "America/Anchorage",
-    "BET" -> "America/Sao_Paulo",
-    "BST" -> "Asia/Dhaka",
-    "CAT" -> "Africa/Harare",
-    "CNT" -> "America/St_Johns",
-    "CST" -> "America/Chicago",
-    "CTT" -> "Asia/Shanghai",
-    "EAT" -> "Africa/Addis_Ababa",
-    "ECT" -> "Europe/Paris",
-    "IET" -> "America/Indiana/Indianapolis",
-    "IST" -> "Asia/Kolkata",
-    "JST" -> "Asia/Tokyo",
-    "MIT" -> "Pacific/Apia",
-    "NET" -> "Asia/Yerevan",
-    "NST" -> "Pacific/Auckland",
-    "PLT" -> "Asia/Karachi",
-    "PNT" -> "America/Phoenix",
-    "PRT" -> "America/Puerto_Rico",
-    "PST" -> "America/Los_Angeles",
-    "SST" -> "Pacific/Guadalcanal",
-    "VST" -> "Asia/Ho_Chi_Minh",
-    "EST" -> "-05:00",
-    "MST" -> "-07:00",
-    "HST" -> "-10:00")
-  def systemDefault=ZoneId("ECT")
+  def from(temporal: TemporalAccessor): ZoneId = ???
+  def getAvailableZoneIds(): java.util.Set[ZoneId] = ???
+  def of(zoneId: String): ZoneId = ???
+  def of(zoneId: String, aliasMap: java.util.Map[String, String]): ZoneId = ???
+  def ofOffset(prefix: String, offset: ZoneOffset): ZoneId = ???
+  def systemDefault(): ZoneId = ???
+
+  val SHORT_IDS: java.util.Map[String, String] = ???
+}
+
+trait ZoneId { self: Wrapper =>
+  protected[time] val zoneIdF = self.f.asInstanceOf[ZoneIdF]
+
+  def getDisplayName(style: TextStyle, locale: Locale): String = ???
+  def getId(): String
+  def getRules(): ZoneRules = zoneIdF.rules
+  def normalized(): ZoneId = zoneIdF.normalized.asInstanceOf[ZoneOffsetF] // Review once there are actual ZoneIds.
+
+  override def toString(): String = f.toString()
+  override def hashCode(): Int = f.hashCode()
+  override def equals(obj: Any): Boolean = f.equals(obj)
 }

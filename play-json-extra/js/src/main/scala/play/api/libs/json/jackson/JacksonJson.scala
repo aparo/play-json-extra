@@ -16,22 +16,22 @@ package play.api.libs.json.jackson
 import play.api.libs.json._
 import upickle.Js
 
-import scala.annotation.{ switch, tailrec }
+import scala.annotation.{switch, tailrec}
 import scala.collection.mutable.ListBuffer
 
 /**
- * The Play JSON module for Jackson.
- *
- * This can be used if you want to use a custom Jackson ObjectMapper, or more advanced Jackson features when working
- * with JsValue.  To use this:
- *
- * {{{
- *   import com.fasterxml.jackson.databind.ObjectMapper
- *
- *   val mapper = new ObjectMapper().registerModule(PlayJsonModule)
- *   val jsValue = mapper.readValue("""{"foo":"bar"}""", classOf[JsValue])
- * }}}
- */
+  * The Play JSON module for Jackson.
+  *
+  * This can be used if you want to use a custom Jackson ObjectMapper, or more advanced Jackson features when working
+  * with JsValue.  To use this:
+  *
+  * {{{
+  *   import com.fasterxml.jackson.databind.ObjectMapper
+  *
+  *   val mapper = new ObjectMapper().registerModule(PlayJsonModule)
+  *   val jsValue = mapper.readValue("""{"foo":"bar"}""", classOf[JsValue])
+  * }}}
+  */
 //object PlayJsonModule extends SimpleModule("PlayJson", Version.unknownVersion()) {
 //  override def setupModule(context: SetupContext) {
 //    context.addDeserializers(new PlayDeserializers)
@@ -82,22 +82,29 @@ private[jackson] sealed trait DeserializerContext {
   def addValue(value: JsValue): DeserializerContext
 }
 
-private[jackson] case class ReadingList(content: ListBuffer[JsValue]) extends DeserializerContext {
+private[jackson] case class ReadingList(content: ListBuffer[JsValue])
+    extends DeserializerContext {
   override def addValue(value: JsValue): DeserializerContext = {
     ReadingList(content += value)
   }
 }
 
 // Context for reading an Object
-private[jackson] case class KeyRead(content: ListBuffer[(String, JsValue)], fieldName: String) extends DeserializerContext {
-  def addValue(value: JsValue): DeserializerContext = ReadingMap(content += (fieldName -> value))
+private[jackson] case class KeyRead(content: ListBuffer[(String, JsValue)],
+                                    fieldName: String)
+    extends DeserializerContext {
+  def addValue(value: JsValue): DeserializerContext =
+    ReadingMap(content += (fieldName -> value))
 }
 
 // Context for reading one item of an Object (we already red fieldName)
-private[jackson] case class ReadingMap(content: ListBuffer[(String, JsValue)]) extends DeserializerContext {
+private[jackson] case class ReadingMap(content: ListBuffer[(String, JsValue)])
+    extends DeserializerContext {
 
   def setField(fieldName: String) = KeyRead(content, fieldName)
-  def addValue(value: JsValue): DeserializerContext = throw new Exception("Cannot add a value on an object without a key, malformed JSON object!")
+  def addValue(value: JsValue): DeserializerContext =
+    throw new Exception(
+        "Cannot add a value on an object without a key, malformed JSON object!")
 
 }
 
@@ -232,7 +239,8 @@ private[json] object JacksonJson {
 //    upickle.json.read(new String(stream.))
 //    mapper.readValue(jsonParser(stream), classOf[JsValue])
 
-  def generateFromJsValue(jsValue: JsValue, escapeNonASCII: Boolean = false): String = {
+  def generateFromJsValue(jsValue: JsValue,
+                          escapeNonASCII: Boolean = false): String = {
     upickle.json.write(jsValue)
 //    val sw = new java.io.StringWriter
 //    val gen = stringJsonGenerator(sw)
@@ -263,24 +271,26 @@ private[json] object JacksonJson {
 
 //  def jsonNodeToJsValue(jsonNode: JsonNode): JsValue =
 //    mapper.treeToValue(jsonNode, classOf[JsValue])
-implicit def jsValueToupValue(value: JsValue): Js.Value = value match {
-  case JsArray(values)  => Js.Arr(values.map(jsValueToupValue):_*)
-  case JsBoolean(s)     => if(s) Js.True else Js.False
-  case JsNull           => Js.Null
-  case JsNumber(value)  => Js.Num(value.toDouble)
-  case JsString(s)      => Js.Str(s)
-  case JsObject(fields) => Js.Obj(fields.map(v => (v._1, jsValueToupValue(v._2))).toSeq:_*)
-  case _   => Js.Null
-}
+  implicit def jsValueToupValue(value: JsValue): Js.Value = value match {
+    case JsArray(values) => Js.Arr(values.map(jsValueToupValue): _*)
+    case JsBoolean(s) => if (s) Js.True else Js.False
+    case JsNull => Js.Null
+    case JsNumber(value) => Js.Num(value.toDouble)
+    case JsString(s) => Js.Str(s)
+    case JsObject(fields) =>
+      Js.Obj(fields.map(v => (v._1, jsValueToupValue(v._2))).toSeq: _*)
+    case _ => Js.Null
+  }
 
   // Convert upickle to play.json /
   implicit def upValueToJsValue(value: Js.Value): JsValue = value match {
-    case arr:Js.Arr => JsArray(arr.value.map(upValueToJsValue _))
-    case Js.True     => JsBoolean(true)
-    case Js.False     => JsBoolean(false)
-    case Js.Num(s)      => JsNumber(s)
-    case Js.Null        => JsNull
-    case Js.Str(s)      => JsString(s)
-    case obj:Js.Obj => JsObject(obj.value.map(v => v._1 -> upValueToJsValue(v._2)))
+    case arr: Js.Arr => JsArray(arr.value.map(upValueToJsValue _))
+    case Js.True => JsBoolean(true)
+    case Js.False => JsBoolean(false)
+    case Js.Num(s) => JsNumber(s)
+    case Js.Null => JsNull
+    case Js.Str(s) => JsString(s)
+    case obj: Js.Obj =>
+      JsObject(obj.value.map(v => v._1 -> upValueToJsValue(v._2)))
   }
 }

@@ -22,7 +22,7 @@ class JsonFormatterEnumTests extends FunSuite {
     }
 
     @JsonFormat
-    case class ColorData(color:Color)
+    final case class ColorData(color:Color)
     assert(Color.asString(Color.Red) == "Red")
     assert(Color.asString(Color.Blue) == "BLUE")
     assert(Color.asString(Color.Yellow) == "YELLOW")
@@ -52,7 +52,7 @@ class JsonFormatterEnumTests extends FunSuite {
     }
 
     @JsonFormat
-    case class ColorData(color:Color)
+    final case class ColorData(color:Color)
     assert(Color.asInt(Color.Red) == 0)
     assert(Color.asInt(Color.Blue) == 1)
     assert(Color.asInt(Color.Yellow) == 2)

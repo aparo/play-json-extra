@@ -3,31 +3,33 @@
  */
 package play.api.libs.iteratee
 
-import java.util.{ ArrayDeque, Deque }
+import java.util.{ArrayDeque, Deque}
 import scala.annotation.tailrec
 import scala.concurrent.ExecutionContext
 
 /**
- * Contains the default ExecutionContext used by Iteratees.
- */
+  * Contains the default ExecutionContext used by Iteratees.
+  */
 object Execution {
 
-  def defaultExecutionContext: ExecutionContext = Implicits.defaultExecutionContext
+  def defaultExecutionContext: ExecutionContext =
+    Implicits.defaultExecutionContext
 
   object Implicits {
-    implicit def defaultExecutionContext: ExecutionContext = Execution.trampoline
+    implicit def defaultExecutionContext: ExecutionContext =
+      Execution.trampoline
     implicit def trampoline: ExecutionContext = Execution.trampoline
   }
 
   /**
-   * Executes in the current thread. Uses a thread local trampoline to make sure the stack
-   * doesn't overflow. Since this ExecutionContext executes on the current thread, it should
-   * only be used to run small bits of fast-running code. We use it here to run the internal
-   * iteratee code.
-   *
-   * Blocking should be strictly avoided as it could hog the current thread.
-   * Also, since we're running on a single thread, blocking code risks deadlock.
-   */
+    * Executes in the current thread. Uses a thread local trampoline to make sure the stack
+    * doesn't overflow. Since this ExecutionContext executes on the current thread, it should
+    * only be used to run small bits of fast-running code. We use it here to run the internal
+    * iteratee code.
+    *
+    * Blocking should be strictly avoided as it could hog the current thread.
+    * Also, since we're running on a single thread, blocking code risks deadlock.
+    */
   object trampoline extends ExecutionContext {
 
     /*
@@ -89,13 +91,14 @@ object Execution {
           val runnables = arrayDeque.asInstanceOf[ArrayDeque[Runnable]]
           runnables.addLast(runnable)
         case illegal =>
-          throw new IllegalStateException(s"Unsupported trampoline ThreadLocal value: $illegal")
+          throw new IllegalStateException(
+              s"Unsupported trampoline ThreadLocal value: $illegal")
       }
     }
 
     /**
-     * Run all tasks that have been scheduled in the ThreadLocal.
-     */
+      * Run all tasks that have been scheduled in the ThreadLocal.
+      */
     @tailrec
     private def executeScheduled(): Unit = {
       local.get match {
@@ -120,7 +123,8 @@ object Execution {
             runnable.run()
           }
         case illegal =>
-          throw new IllegalStateException(s"Unsupported trampoline ThreadLocal value: $illegal")
+          throw new IllegalStateException(
+              s"Unsupported trampoline ThreadLocal value: $illegal")
       }
     }
 

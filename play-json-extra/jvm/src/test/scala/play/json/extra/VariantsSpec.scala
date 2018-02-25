@@ -6,12 +6,12 @@ import play.api.libs.json.{Reads, Json, Format, __}
 object VariantsSpec extends Specification {
 
   sealed trait Foo
-  case class Bar(x: Int) extends Foo
-  case class Baz(s: String) extends Foo
+  final case class Bar(x: Int) extends Foo
+  final case class Baz(s: String) extends Foo
   case object Bah extends Foo
 
   sealed trait Attachment
-  case class PhotoAttachment(photo: String) extends Attachment
+  final case class PhotoAttachment(photo: String) extends Attachment
 
   sealed trait Status
   case object ToDo extends Status
@@ -24,8 +24,8 @@ object VariantsSpec extends Specification {
   implicit val statusFormat: Format[Status] = Variants.format[Status]
 
   sealed trait A
-  case class B(x: Int) extends A
-  case class C(x: Int) extends A
+  final case class B(x: Int) extends A
+  final case class C(x: Int) extends A
 
   "Variants" should {
 
